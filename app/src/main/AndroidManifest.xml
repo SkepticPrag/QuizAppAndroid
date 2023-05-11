@@ -12,17 +12,13 @@
         android:theme="@style/Theme.QuizApp"
         tools:targetApi="31">
         <activity
-            android:name=".QuizQuestionsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".feature_quiz.presentation.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
