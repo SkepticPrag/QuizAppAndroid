@@ -1,4 +1,4 @@
-package com.example.quizapp.theme
+package com.quizapp.theme
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors

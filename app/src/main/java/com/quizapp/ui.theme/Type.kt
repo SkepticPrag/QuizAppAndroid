@@ -1,4 +1,4 @@
-package com.example.quizapp.theme
+package com.quizapp.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
