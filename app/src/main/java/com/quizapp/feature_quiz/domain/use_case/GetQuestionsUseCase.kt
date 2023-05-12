@@ -10,27 +10,25 @@ class GetQuestionsUseCase(
     private val repository: QuestionRepository
 )
 {
-    operator fun invoke(questionOrder: QuestionOrder =QuestionOrder.RandomOrder(OrderType.Descending)): Flow<List<Question>>
+    operator fun invoke(questionOrder: QuestionOrder =QuestionOrder.Category(OrderType.Descending)): Flow<List<Question>>
     {
-        return repository.getQuestions.map{notes->
-            when (noteOrder.orderType)
+        return repository.getQuestions().map{questions->
+            when (questionOrder.orderType)
             {
                 is OrderType.Ascending->
                 {
-                    when(noteOrder)
+                    when(questionOrder)
                     {
-                        is NoteOrder.Title-> notes.sortedBy { it.title.lowercase() }
-                        is NoteOrder.Date -> notes.sortedBy { it.timeStamp }
-                        is NoteOrder.Color->notes.sortedBy { it.color }
+                        is QuestionOrder.Category-> questions.sortedBy { it.category.lowercase() }
+                        is QuestionOrder.Difficulty -> questions.sortedBy { it.difficulty }
                     }
                 }
                 is OrderType.Descending->
                 {
-                    when(noteOrder)
+                    when(questionOrder)
                     {
-                        is NoteOrder.Title-> notes.sortedByDescending { it.title.lowercase() }
-                        is NoteOrder.Date -> notes.sortedByDescending { it.timeStamp }
-                        is NoteOrder.Color->notes.sortedByDescending { it.color }
+                        is QuestionOrder.Category-> questions.sortedByDescending { it.category.lowercase() }
+                        is QuestionOrder.Difficulty -> questions.sortedByDescending { it.difficulty }
                     }
                 }
             }
