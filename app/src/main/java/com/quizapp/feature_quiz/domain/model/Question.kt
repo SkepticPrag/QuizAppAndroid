@@ -20,4 +20,4 @@ data class Question(
     }
 }
 
-class InvalidNoteException(message:String):Exception(message)
+class InvalidQuestionException(message:String):Exception(message)
