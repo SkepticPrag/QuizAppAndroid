@@ -1,4 +1,7 @@
 package com.quizapp.feature_quiz.domain.util
 
-class OrderType {
+sealed class OrderType
+{
+    object Ascending:OrderType()
+    object Descending:OrderType()
 }
