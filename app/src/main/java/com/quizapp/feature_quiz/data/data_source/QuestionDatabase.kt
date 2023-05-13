@@ -9,7 +9,7 @@ import com.quizapp.feature_quiz.domain.model.Question
 )
 
 abstract class QuestionDatabase {
-    abstract val noteDao: QuestionDao
+    abstract val questionDao: QuestionDao
 
     companion object {
         const val DATABASE_NAME = "questions_db"
