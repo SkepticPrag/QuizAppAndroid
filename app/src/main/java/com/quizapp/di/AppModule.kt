@@ -6,6 +6,7 @@ import com.quizapp.feature_quiz.data.data_source.QuestionDatabase
 import com.quizapp.feature_quiz.data.repository.QuestionRepositoryImplementation
 import com.quizapp.feature_quiz.domain.repository.QuestionRepository
 import com.quizapp.feature_quiz.domain.use_case.GetQuestionUseCase
+import com.quizapp.feature_quiz.domain.use_case.QuestionUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,9 +35,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideQuestionUseCases(repository: QuestionDatabase): GetQuestionUseCase{
+    fun provideQuestionUseCases(repository: QuestionDatabase): QuestionUseCases {
         return QuestionUseCases(
-            getQuestion = GetQuestionUseCase(repository),
+            getQuestion = GetQuestionUseCase(repository)
         )
 
     }
