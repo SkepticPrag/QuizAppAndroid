@@ -19,7 +19,7 @@ class GetQuestionsUseCase(
                 {
                     when(questionOrder)
                     {
-                        is QuestionOrder.Category-> questions.sortedBy { it.category.lowercase() }
+                        is QuestionOrder.Category-> questions.sortedBy { it.question.lowercase() }
                         is QuestionOrder.Difficulty -> questions.sortedBy { it.difficulty }
                     }
                 }
@@ -27,7 +27,7 @@ class GetQuestionsUseCase(
                 {
                     when(questionOrder)
                     {
-                        is QuestionOrder.Category-> questions.sortedByDescending { it.category.lowercase() }
+                        is QuestionOrder.Category-> questions.sortedByDescending { it.question.lowercase() }
                         is QuestionOrder.Difficulty -> questions.sortedByDescending { it.difficulty }
                     }
                 }
