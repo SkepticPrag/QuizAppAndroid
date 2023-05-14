@@ -29,11 +29,11 @@ class QuestionViewModel @Inject constructor(
     private val _questionOptionThree = mutableStateOf(QuestionTextFieldState(hint = "Enter Three Option..."))
     val questionOptionThree: State<QuestionTextFieldState> = _questionOptionThree
 
-    private val _questionAnswer = mutableStateOf(Question.answer)
+    private val _questionAnswer = mutableStateOf(Question.correctAnswerNumber)
     val questionAnswer: State<Int> = _questionAnswer
 
-    private val _questionCategory = mutableStateOf(Question.category.random().toString())
-    val questionCategory: State<String> = _questionCategory
+    private val _questionCategory = mutableStateOf(Question.categoryList.random().MAX_VALUE)
+    val questionCategory: State<Int> = _questionCategory
 
     private var currentQuestionId:Int? = null
 
@@ -65,8 +65,68 @@ class QuestionViewModel @Inject constructor(
 
                         _questionAnswer.value = question.correctAnswer
 
-                        _questionCategory.value = questionCategory.toString()
+                        _questionCategory.value = question.category
 
+                    }
+                }
+            }
+        }
+    }
+
+    fun onEvent(event: AddEditQuestionEvent)
+    {
+        when(event)
+        {
+            is AddEditQuestionEvent.EnteredQuestion->{
+                _questionQuestion.value = questionQuestion.value.copy(text = event.value)
+            }
+            is AddEditQuestionEvent.ChangeQuestionFocus ->
+            {
+                _questionQuestion.value= questionQuestion.value.copy(isHintVisible = !event.focusState.isFocused && questionQuestion.value.text.isBlank())
+            }
+            is AddEditQuestionEvent.EnteredOptionOne->{
+                _questionOptionOne.value = questionOptionOne.value.copy(text = event.value)
+            }
+            is AddEditQuestionEvent.ChangeOptionOneFocus ->
+            {
+                _questionOptionOne.value= questionOptionOne.value.copy(isHintVisible = !event.focusState.isFocused && questionOptionOne.value.text.isBlank())
+            }
+            is AddEditQuestionEvent.EnteredOptionTwo->{
+                _questionOptionTwo.value = questionOptionTwo.value.copy(text = event.value)
+            }
+            is AddEditQuestionEvent.ChangeOptionTwoFocus ->
+            {
+                _questionOptionTwo.value= questionOptionTwo.value.copy(isHintVisible = !event.focusState.isFocused && questionOptionTwo.value.text.isBlank())
+            }
+            is AddEditQuestionEvent.EnteredOptionThree->{
+                _questionOptionOne.value = questionOptionThree.value.copy(text = event.value)
+            }
+            is AddEditQuestionEvent.ChangeOptionThreeFocus ->
+            {
+                _questionOptionThree.value= questionOptionThree.value.copy(isHintVisible = !event.focusState.isFocused && questionOptionThree.value.text.isBlank())
+            }
+
+            is AddEditQuestionEvent.ChangeCategory ->{
+                _questionCategory.value = event.category
+            }
+            is AddEditQuestionEvent.SaveQuestion -> {
+                viewModelScope.launch {
+                    try
+                    {
+                        questionUseCases.addQuestion(
+                            Question(
+                                title = noteTitle.value.text,
+                                content = noteContent.value.text,
+                                timeStamp = System.currentTimeMillis(),
+                                color = noteColor.value,
+                                id = currentNoteId
+                            )
+                        )
+                        _eventFlow.emit(UiEvent.SaveNote)
+                    } catch (e: InvalidNoteException) {
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackBar(message = e.message?: "Couldn't save note")
+                        )
                     }
                 }
             }
