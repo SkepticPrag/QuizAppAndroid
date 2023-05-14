@@ -18,7 +18,8 @@ data class Question(
 {
     companion object{
         val categoryList = listOf(scienceCategory, movieCategory , historyCategory, sportsCategory, worldCategory)
-        val correctAnswerNumber = -1
+        val correctAnswerNumber = 0
+        val difficultyNumber = 0
     }
 }
 

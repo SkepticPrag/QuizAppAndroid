@@ -5,9 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.quizapp.feature_quiz.domain.model.InvalidQuestionException
 import com.quizapp.feature_quiz.domain.model.Question
 import com.quizapp.feature_quiz.domain.use_case.QuestionUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,6 +19,12 @@ class QuestionViewModel @Inject constructor(
     private val questionUseCases: QuestionUseCases,
     savedStateHandle: SavedStateHandle
 ): ViewModel(){
+
+    private val _questionCategory = mutableStateOf(Question.categoryList.random().MAX_VALUE)
+    val questionCategory: State<Int> = _questionCategory
+
+    private val _questionDifficulty = mutableStateOf(Question.difficultyNumber)
+    val questionDifficulty: State<Int> = _questionDifficulty
 
     private val _questionQuestion = mutableStateOf(QuestionTextFieldState(hint = "Enter Question..."))
     val questionQuestion: State<QuestionTextFieldState> = _questionQuestion
@@ -32,8 +41,10 @@ class QuestionViewModel @Inject constructor(
     private val _questionAnswer = mutableStateOf(Question.correctAnswerNumber)
     val questionAnswer: State<Int> = _questionAnswer
 
-    private val _questionCategory = mutableStateOf(Question.categoryList.random().MAX_VALUE)
-    val questionCategory: State<Int> = _questionCategory
+
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     private var currentQuestionId:Int? = null
 
@@ -64,7 +75,7 @@ class QuestionViewModel @Inject constructor(
                         )
 
                         _questionAnswer.value = question.correctAnswer
-
+                        _questionDifficulty.value = question.difficulty
                         _questionCategory.value = question.category
 
                     }
@@ -115,21 +126,29 @@ class QuestionViewModel @Inject constructor(
                     {
                         questionUseCases.addQuestion(
                             Question(
-                                title = noteTitle.value.text,
-                                content = noteContent.value.text,
-                                timeStamp = System.currentTimeMillis(),
-                                color = noteColor.value,
-                                id = currentNoteId
+                                category = questionCategory.value,
+                                difficulty = questionDifficulty.value,
+                                question = questionQuestion.value.text,
+                                optionOne = questionOptionOne.value.text,
+                                optionTwo = questionOptionTwo.value.text,
+                                optionThree = questionOptionThree.value.text,
+                                correctAnswer = questionAnswer.value,
+
+                                id = currentQuestionId
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveNote)
-                    } catch (e: InvalidNoteException) {
+                    } catch (e: InvalidQuestionException) {
                         _eventFlow.emit(
-                            UiEvent.ShowSnackBar(message = e.message?: "Couldn't save note")
+                            UiEvent.ShowSnackBar(message = e.message?: "Couldn't save question")
                         )
                     }
                 }
             }
         }
+    }
+    sealed class UiEvent{
+        data class ShowSnackBar(val message: String): UiEvent()
+        object SaveNote: UiEvent()
     }
 }
