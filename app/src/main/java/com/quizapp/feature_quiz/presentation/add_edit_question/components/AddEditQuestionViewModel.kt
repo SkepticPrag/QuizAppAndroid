@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class QuestionViewModel @Inject constructor(
+class AddEditQuestionViewModel @Inject constructor(
     private val questionUseCases: QuestionUseCases,
     savedStateHandle: SavedStateHandle
 ): ViewModel(){
@@ -35,7 +35,7 @@ class QuestionViewModel @Inject constructor(
     private val _questionOptionTwo = mutableStateOf(QuestionTextFieldState(hint = "Enter Second Option..."))
     val questionOptionTwo: State<QuestionTextFieldState> = _questionOptionTwo
 
-    private val _questionOptionThree = mutableStateOf(QuestionTextFieldState(hint = "Enter Three Option..."))
+    private val _questionOptionThree = mutableStateOf(QuestionTextFieldState(hint = "Enter Third Option..."))
     val questionOptionThree: State<QuestionTextFieldState> = _questionOptionThree
 
     private val _questionAnswer = mutableStateOf(Question.correctAnswerNumber)
@@ -117,6 +117,10 @@ class QuestionViewModel @Inject constructor(
                 _questionOptionThree.value= questionOptionThree.value.copy(isHintVisible = !event.focusState.isFocused && questionOptionThree.value.text.isBlank())
             }
 
+            is AddEditQuestionEvent.EnteredAnswer ->{
+                _questionAnswer.value = event.value
+            }
+
             is AddEditQuestionEvent.ChangeCategory ->{
                 _questionCategory.value = event.category
             }
@@ -137,7 +141,7 @@ class QuestionViewModel @Inject constructor(
                                 id = currentQuestionId
                             )
                         )
-                        _eventFlow.emit(UiEvent.SaveNote)
+                        _eventFlow.emit(UiEvent.SaveQuestion)
                     } catch (e: InvalidQuestionException) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackBar(message = e.message?: "Couldn't save question")
@@ -149,6 +153,6 @@ class QuestionViewModel @Inject constructor(
     }
     sealed class UiEvent{
         data class ShowSnackBar(val message: String): UiEvent()
-        object SaveNote: UiEvent()
+        object SaveQuestion: UiEvent()
     }
 }
