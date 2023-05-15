@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.quizapp.feature_quiz.domain.model.Question
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -64,6 +65,82 @@ fun AddEditQuestionScreen(
                     navController.navigateUp()
                 }
             }
+        }
+    }
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    viewModel.onEvent(AddEditQuestionEvent.SaveQuestion)
+                },
+                backgroundColor = MaterialTheme.colors.primary
+            ){
+                Icon(imageVector = Icons.Default.Save, contentDescription = "Save Question")
+            }
+
+        },
+        scaffoldState = scaffoldState
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(noteBackgroundAnimatable.value)
+                .padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Question.categoryList.forEach { category ->
+                    val categoryInt = category
+                    Box(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .shadow(15.dp, CircleShape)
+                            .clip(CircleShape)
+                            .background(drawable)
+                            .border(
+                                width = 3.dp,
+                                color = if (viewModel.noteColor.value == colorInt) {
+                                    Color.Black
+                                } else Color.Transparent,
+                                shape = CircleShape
+                            )
+                            .clickable {
+                                scope.launch {
+                                    noteBackgroundAnimatable.animateTo(
+                                        targetValue = Color(colorInt),
+                                        animationSpec = tween(durationMillis = 500)
+                                    )
+                                }
+                                viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
+                            }
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            TransparentHintTextField(text = titleState.text, hint = titleState.hint, onValueChange = {
+                viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))},
+                onFocusChange = {
+                    viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
+                },
+                isHintVisible = titleState.isHintVisible,
+                singleLine = true,
+                textStyle = MaterialTheme.typography.h5
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            TransparentHintTextField(text = contentState.text, hint = contentState.hint, onValueChange = {
+                viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))},
+                onFocusChange = {
+                    viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
+                },
+                isHintVisible = contentState.isHintVisible,
+                textStyle = MaterialTheme.typography.body1,
+                modifier = Modifier.fillMaxHeight()
+            )
         }
     }
 }
