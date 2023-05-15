@@ -84,8 +84,6 @@ fun AddEditQuestionScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(noteBackgroundAnimatable.value)
-                .padding(16.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -95,52 +93,10 @@ fun AddEditQuestionScreen(
             ) {
                 Question.categoryList.forEach { category ->
                     val categoryInt = category
-                    Box(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .shadow(15.dp, CircleShape)
-                            .clip(CircleShape)
-                            .background(drawable)
-                            .border(
-                                width = 3.dp,
-                                color = if (viewModel.noteColor.value == colorInt) {
-                                    Color.Black
-                                } else Color.Transparent,
-                                shape = CircleShape
-                            )
-                            .clickable {
-                                scope.launch {
-                                    noteBackgroundAnimatable.animateTo(
-                                        targetValue = Color(colorInt),
-                                        animationSpec = tween(durationMillis = 500)
-                                    )
-                                }
-                                viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
-                            }
-                    )
+
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            TransparentHintTextField(text = titleState.text, hint = titleState.hint, onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))},
-                onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
-                },
-                isHintVisible = titleState.isHintVisible,
-                singleLine = true,
-                textStyle = MaterialTheme.typography.h5
-            )
 
-            Spacer(modifier = Modifier.height(16.dp))
-            TransparentHintTextField(text = contentState.text, hint = contentState.hint, onValueChange = {
-                viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))},
-                onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
-                },
-                isHintVisible = contentState.isHintVisible,
-                textStyle = MaterialTheme.typography.body1,
-                modifier = Modifier.fillMaxHeight()
-            )
         }
     }
 }
