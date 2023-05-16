@@ -19,6 +19,42 @@ fun OrderSection(
         modifier =  modifier
     )
     {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Spacer(modifier = Modifier.width(8.dp))
+            DefaultRadioButton(
+                text = "Difficulty",
+                selected = questionOrder is QuestionOrder.Difficulty,
+                onSelect = {onOrderChange(QuestionOrder.Difficulty(questionOrder.orderType))
+                }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            DefaultRadioButton(
+                text = "Category",
+                selected = questionOrder is QuestionOrder.Category,
+                onSelect = {onOrderChange(QuestionOrder.Category(questionOrder.orderType))
+                }
+            )
+        }
 
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ){
+            DefaultRadioButton(
+                text = "Ascending",
+                selected = questionOrder.orderType is OrderType.Ascending,
+                onSelect = {onOrderChange(questionOrder.copy(OrderType.Ascending))
+                }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            DefaultRadioButton(
+                text = "Descending",
+                selected = questionOrder.orderType is OrderType.Descending,
+                onSelect = {onOrderChange(questionOrder.copy(OrderType.Descending))
+                }
+            )
+        }
     }
 }
