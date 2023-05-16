@@ -46,7 +46,42 @@ fun QuestionsScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Questions Database",
+                    style = MaterialTheme.typography.h4
+                )
+                IconButton(
+                    onClick = {
+                        viewModel.onEvent(QuestionsEvent.ToggleOrderSection)
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Sort,
+                        contentDescription = "Sort"
+                    )
+                }
+            }
+            AnimatedVisibility(
+                visible = state.isOrderSectionVisible,
+                enter = fadeIn() + slideInVertically(),
+                exit = fadeOut() + slideOutVertically()
+            ) {
+                OrderSection(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    questionOrder = state.questionOrder,
+                    onOrderChange = {
+                        viewModel.onEvent(QuestionsEvent.Order(it))
+                    }
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
