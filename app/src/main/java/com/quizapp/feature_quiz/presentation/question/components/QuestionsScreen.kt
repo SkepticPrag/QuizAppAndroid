@@ -82,6 +82,34 @@ fun QuestionsScreen(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
+            LazyColumn(modifier = Modifier.fillMaxSize())
+            {
+                items(state.questions)
+                {
+                        question -> QuestionItem(
+                    question = question,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable
+                        {
+                            navController.navigate(Screen.AddEditQuestionScreen.route + "?questionId=${question.id}&questionCategory=${question.category}")
+                        },
+                    onDeleteClick = {
+                        viewModel.onEvent(QuestionsEvent.DeleteQuestion(question))
+                        scope.launch {
+                            val result = scaffoldState.snackbarHostState.showSnackbar(
+                                message = "Note Deleted",
+                                actionLabel = "Undo"
+                            )
+                            if(result == SnackbarResult.ActionPerformed){
+                                viewModel.onEvent(QuestionsEvent.RestoreQuestion)
+                            }
+                        }
+                    }
+                )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
         }
     }
 }
