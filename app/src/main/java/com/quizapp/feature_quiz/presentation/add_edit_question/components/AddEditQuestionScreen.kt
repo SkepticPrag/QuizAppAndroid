@@ -2,8 +2,9 @@ package com.quizapp.feature_quiz.presentation.add_edit_question.components
 
 
 import androidx.compose.animation.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -92,11 +93,69 @@ fun AddEditQuestionScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Question.categoryList.forEach { category ->
-                    val categoryInt = category
-
+                    Box(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .shadow(15.dp, CircleShape)
+                            .clip(CircleShape)
+                            .background(Color.Transparent)
+                            .border(
+                                width = 3.dp,
+                                color = if (viewModel.questionCategory.value == category) {
+                                    Color.Black
+                                } else Color.Black,
+                                shape = CircleShape
+                            )
+                            .clickable {
+                                    viewModel.onEvent(AddEditQuestionEvent.ChangeCategory(category))
+                            }
+                    )
                 }
-            }
 
+                Spacer(modifier = Modifier.height(16.dp))
+                TransparentHintTextField(text = questionState.text, hint = questionState.hint, onValueChange = {
+                    viewModel.onEvent(AddEditQuestionEvent.EnteredQuestion(it))},
+                    onFocusChange = {
+                        viewModel.onEvent(AddEditQuestionEvent.ChangeQuestionFocus(it))
+                    },
+                    isHintVisible = questionState.isHintVisible,
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.h5
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+                TransparentHintTextField(text = optionOneState.text, hint = optionOneState.hint, onValueChange = {
+                    viewModel.onEvent(AddEditQuestionEvent.EnteredOptionOne(it))},
+                    onFocusChange = {
+                        viewModel.onEvent(AddEditQuestionEvent.ChangeOptionOneFocus(it))
+                    },
+                    isHintVisible = optionOneState.isHintVisible,
+                    textStyle = MaterialTheme.typography.body1,
+                    modifier = Modifier.fillMaxHeight()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+                TransparentHintTextField(text = optionTwoState.text, hint = optionTwoState.hint, onValueChange = {
+                    viewModel.onEvent(AddEditQuestionEvent.EnteredOptionTwo(it))},
+                    onFocusChange = {
+                        viewModel.onEvent(AddEditQuestionEvent.ChangeOptionTwoFocus(it))
+                    },
+                    isHintVisible = optionTwoState.isHintVisible,
+                    textStyle = MaterialTheme.typography.body1,
+                    modifier = Modifier.fillMaxHeight()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+                TransparentHintTextField(text = optionThreeState.text, hint = optionThreeState.hint, onValueChange = {
+                    viewModel.onEvent(AddEditQuestionEvent.EnteredOptionThree(it))},
+                    onFocusChange = {
+                        viewModel.onEvent(AddEditQuestionEvent.ChangeOptionThreeFocus(it))
+                    },
+                    isHintVisible = optionOneState.isHintVisible,
+                    textStyle = MaterialTheme.typography.body1,
+                    modifier = Modifier.fillMaxHeight()
+                )
+            }
         }
     }
 }

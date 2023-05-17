@@ -20,7 +20,7 @@ class AddEditQuestionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ): ViewModel(){
 
-    private val _questionCategory = mutableStateOf(Question.categoryList.random().MAX_VALUE)
+    private val _questionCategory = mutableStateOf(Question.categoryList.random())
     val questionCategory: State<Int> = _questionCategory
 
     private val _questionDifficulty = mutableStateOf(Question.difficultyNumber)
