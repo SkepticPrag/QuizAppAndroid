@@ -93,13 +93,13 @@ fun QuestionsScreen(
                         .fillMaxWidth()
                         .clickable
                         {
-                            navController.navigate(Screen.AddEditQuestionScreen.route + "?questionId=${question.id}&questionCategory=${question.category}")
+                            navController.navigate(Screen.AddEditQuestionScreen.route + "?questionId=${question.id}&questionCategory=${question.category}&questionDifficulty=${question.difficulty}")
                         },
                     onDeleteClick = {
                         viewModel.onEvent(QuestionsEvent.DeleteQuestion(question))
                         scope.launch {
                             val result = scaffoldState.snackbarHostState.showSnackbar(
-                                message = "Note Deleted",
+                                message = "Question Deleted",
                                 actionLabel = "Undo"
                             )
                             if(result == SnackbarResult.ActionPerformed){
