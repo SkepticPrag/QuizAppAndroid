@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.quizapp.feature_quiz.presentation.util.Screen
 import com.quizapp.feature_quiz.presentation.add_edit_question.components.AddEditQuestionScreen
+import com.quizapp.feature_quiz.presentation.question.components.QuestionsScreen
 import com.quizapp.theme.QuizAppAndroid
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,14 +38,14 @@ class MainActivity : ComponentActivity() {
                         composable(route = Screen.AddEditQuestionScreen.route + "?questionId={questionId}&questionCategory={questionCategory}&questionDifficulty={questionDifficulty}",
                             arguments = listOf(
                                 navArgument(
-                                    name = "noteId"
+                                    name = "questionId"
                                 )
                                 {
                                     type = NavType.IntType
                                     defaultValue = -1
                                 },
                                 navArgument(
-                                    name = "noteColor"
+                                    name = "questionCategory"
                                 )
                                 {
                                     type = NavType.IntType
@@ -52,8 +53,8 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ){
-                            val color = it.arguments?.getInt("noteColor")?: -1
-                            AddEditQuestionScreen(navController = navController, noteColor = color)
+                            val category = it.arguments?.getInt("questionCategory")?: -1
+                            AddEditQuestionScreen(navController = navController, questionCategory = category)
                         }
                     }
                 }
